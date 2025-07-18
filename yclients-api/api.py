@@ -55,7 +55,7 @@ class Api:
             return response["data"]["services"]
         raise Exception("Error booking services")
 
-    async def book_dates(self, services_ids: List[int], staff_id: int) -> List[str]:
+    async def book_dates(self, services_ids: List[int], staff_id: int) -> List[dict]:
         """Book dates
         """
         url = f"https://api.yclients.com/api/v1/book_dates/{self.company_id}"
@@ -71,5 +71,23 @@ class Api:
             ) as response:
                 response = await response.text()
         if response["success"]:
+            log.info(
+                f"Successfully booked dates for services {services_ids}"
+            )
             return response["data"]["booking_dates"]
         raise Exception("Error booking dates")
+
+    async def staff(self, service_id: int) -> List[dict]:
+        """Get staff function
+        """
+        url = f"https://api.yclients.com/api/v1/company/{self.company_id}/services/{service_id}"
+        async with aiohttp.ClientSession() as session:
+            async with session.get(
+                url=url,
+                headers=self.headers,
+            ) as response:
+                response = await response.text()
+        if response["success"]:
+            log.info("Successfully got staff")
+            return response["data"]["staff"]
+        raise Exception("Error getting staff")
