@@ -55,7 +55,7 @@ class Api:
             return response["data"]["services"]
         raise Exception("Error booking services")
 
-    async def book_dates(self, services_ids: List[int], staff_id: int) -> None:
+    async def book_dates(self, services_ids: List[int], staff_id: int) -> List[str]:
         """Book dates
         """
         url = f"https://api.yclients.com/api/v1/book_dates/{self.company_id}"
@@ -71,4 +71,5 @@ class Api:
             ) as response:
                 response = await response.text()
         if response["success"]:
-            ...
+            return response["data"]["booking_dates"]
+        raise Exception("Error booking dates")
