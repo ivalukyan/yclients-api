@@ -39,7 +39,7 @@ class Api:
             return response["data"]["user_token"]
         raise Exception(f"Error getting user token for user {login}")
 
-    async def book_services(self) -> None:
+    async def get_book_services(self) -> None:
         """Book services
         """
         url = f"https://api.yclients.com/api/v1/book_services/{self.company_id}"
@@ -55,7 +55,7 @@ class Api:
             return response["data"]["services"]
         raise Exception("Error booking services")
 
-    async def book_dates(self, services_ids: List[int], staff_id: int) -> List[dict]:
+    async def get_book_dates(self, services_ids: List[int], staff_id: int) -> List[dict]:
         """Book dates
         """
         url = f"https://api.yclients.com/api/v1/book_dates/{self.company_id}"
@@ -77,7 +77,7 @@ class Api:
             return response["data"]["booking_dates"]
         raise Exception("Error booking dates")
 
-    async def staff(self, service_id: int) -> List[dict]:
+    async def get_staff(self, service_id: int) -> List[dict]:
         """Get staff function
         """
         url = f"https://api.yclients.com/api/v1/company/{self.company_id}/services/{service_id}"
@@ -91,3 +91,39 @@ class Api:
             log.info("Successfully got staff")
             return response["data"]["staff"]
         raise Exception("Error getting staff")
+
+    async def get_book_staff(self) -> List[dict]:
+        """Get book staff function
+        """
+        url = f"https://api.yclients.com/api/v1/book_staff/{self.company_id}"
+        async with aiohttp.ClientSession() as session:
+            async with session.get(url=url, headers=self.headers) as response:
+                response = await response.text()
+        if response["success"]:
+            log.info("Successfully get booked staff")
+            return response["data"]
+        raise Exception("Error getting booked staff")
+
+    async def get_book_category(self) -> List[dict]:
+        """Get book category function
+        """
+        url = f"https://api.yclients.com/api/v1/book_services/{self.company_id}"
+        async with aiohttp.ClientSession() as session:
+            async with session.get(url=url, headers=self.headers) as response:
+                response = await response.text()
+        if response["success"]:
+            log.info("Successfully get booked category")
+            return response["data"]["category"]
+        raise Exception("Error getting booked category")
+
+    async def get_book_times(self, staff_id: int, date: str) -> List[dict]:
+        """Function for getting book times
+        """
+        url = f"https://api.yclients.com/api/v1/book_times/{self.company_id}/{staff_id}/{date}"
+        async with aiohttp.ClientSession() as session:
+            async with session.get(url=url, headers=self.headers) as response:
+                response = await response.text()
+        if response["success"]:
+            log.info("Successfully got booked times")
+            return response["data"]
+        raise Exception("Error getting booked times")
