@@ -1,7 +1,7 @@
 import aiohttp
 
+from tools.logger import log
 from yclients_api.auth.auth_models import AuthModelResponse
-from yclients_api.__init__ import log
 
 
 class AuthAPI:
