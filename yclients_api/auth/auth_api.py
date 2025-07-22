@@ -1,7 +1,6 @@
 import aiohttp
 
 from tools.logger import log
-from yclients_api.auth.auth_models import AuthModelResponse
 
 
 class AuthAPI:
@@ -26,6 +25,5 @@ class AuthAPI:
                 res = await response.text()
         if res["success"]:
             log.info(f"Success getting user token for user {login}")
-            auth_model = AuthModelResponse(**res["data"])
-            return auth_model.user_token
+            return res["data"]["user_token"]
         raise Exception(f"Error getting user token for user {login}")
